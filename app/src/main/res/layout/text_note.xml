@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/title_note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start|top"
+        android:singleLine="true"
+        android:textAllCaps="true"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+<!--    TODO:
+            - comprendre pourquoi le texte ne se met pas en majuscules
+            - bloquer le scroll horizontal
+            - mettre le focus dans le titre dèque la page est ouvert (clavier qui s'ouvre directement sans avoir à cliquer)
+
+-->
+    <EditText
+        android:id="@+id/text_note"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
+        android:background="@color/white"/>
+
+</LinearLayout>
+
