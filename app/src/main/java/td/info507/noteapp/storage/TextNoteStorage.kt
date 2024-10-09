@@ -3,6 +3,7 @@ package td.info507.noteapp.storage
 import android.content.Context
 import android.content.SharedPreferences
 import android.text.Editable
+import android.util.Log
 import td.info507.noteapp.model.TextNote
 import td.info507.noteapp.storage.utility.Storage
 
@@ -15,7 +16,7 @@ object TextNoteStorage {
     }
 
     fun getTitle(context: Context): Editable?{
-        val title = getPreferences(context).getString(TITLE, "")
+        val title = getPreferences(context).getString(TITLE, null)
         return Editable.Factory.getInstance().newEditable(title) // string to editable
     }
 
@@ -24,11 +25,15 @@ object TextNoteStorage {
     }
 
     fun getText(context: Context): Editable?{
-        val text = getPreferences(context).getString(TEXT,"")
+        val text = getPreferences(context).getString(TEXT, null)
         return Editable.Factory.getInstance().newEditable(text) // string to editable
     }
 
     fun setText(context: Context, prefText: String) {
         getPreferences(context).edit().putString(TEXT, prefText).apply()
+    }
+
+    fun get(context: Context): Storage<TextNote>{
+        return TextNoteJSONFileStorage(context)
     }
 }

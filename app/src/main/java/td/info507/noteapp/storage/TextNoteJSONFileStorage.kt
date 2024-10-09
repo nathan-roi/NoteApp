@@ -2,6 +2,7 @@ package td.info507.noteapp.storage
 
 import android.content.Context
 import android.util.Log
+import android.widget.EditText
 import org.json.JSONObject
 import td.info507.noteapp.model.TextNote
 import td.info507.noteapp.storage.utility.file.JSONFileStorage

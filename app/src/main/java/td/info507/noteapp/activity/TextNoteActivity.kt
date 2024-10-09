@@ -1,10 +1,13 @@
-package td.info507.noteapp
+package td.info507.noteapp.activity
 
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import td.info507.noteapp.R
+import td.info507.noteapp.model.TextNote
 import td.info507.noteapp.storage.TextNoteStorage
 
 class TextNoteActivity: AppCompatActivity() {
@@ -14,13 +17,25 @@ class TextNoteActivity: AppCompatActivity() {
         setContentView(R.layout.text_note)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val title_note = findViewById<EditText>(R.id.title_note)
-        val text_note = findViewById<EditText>(R.id.text_note)
+//        updateTextNote()
+    }
 
-        findViewById<EditText>(R.id.title_note).text = TextNoteStorage.getTitle(applicationContext)
-        findViewById<EditText>(R.id.text_note).text = TextNoteStorage.getText(applicationContext)
+    override fun onDestroy() {
+        super.onDestroy()
+        val title = findViewById<EditText>(R.id.title_note).text.toString()
+        val text = findViewById<EditText>(R.id.text_note).text.toString()
 
-        updateTextNote()
+        if (title != "" || text != "" ){
+            TextNoteStorage.get(applicationContext).insert(
+                TextNote(
+                    0,
+                    findViewById<EditText>(R.id.title_note).text.toString(),
+                    findViewById<EditText>(R.id.text_note).text.toString()
+                )
+            )
+        }
+
+        // TODO: notifier le recycleView qu'une nouvelle note est ajouté + ne s'enregistre pas tout les cas (taskkiller)
     }
 
     private fun updateTextNote(){

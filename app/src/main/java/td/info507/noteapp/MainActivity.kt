@@ -2,18 +2,30 @@ package td.info507.noteapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import td.info507.noteapp.model.TextNote
+import td.info507.noteapp.activity.TextNoteActivity
+import td.info507.noteapp.adapter.TextNoteAdapter
 import td.info507.noteapp.request.NoteListRequest
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        const val EXTRA_NOTE = "EXTRA_NOTE"
+    }
+
+    private lateinit var list: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val list: RecyclerView = findViewById(R.id.text_note_list)
+        list.adapter = TextNoteAdapter(applicationContext)
 
          val createButton = findViewById<FloatingActionButton>(R.id.create_button)
 

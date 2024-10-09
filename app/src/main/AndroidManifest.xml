@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TextNoteActivity"
+            android:name=".activity.TextNoteActivity"
             android:exported="true"
             android:parentActivityName=".MainActivity">
             <meta-data
