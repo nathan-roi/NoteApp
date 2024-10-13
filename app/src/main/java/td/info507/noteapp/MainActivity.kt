@@ -7,11 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import td.info507.noteapp.activity.TextNoteActivity
 import td.info507.noteapp.adapter.TextNoteAdapter
 import td.info507.noteapp.request.NoteListRequest
+import td.info507.noteapp.storage.TextNoteStorage
 
 class MainActivity : AppCompatActivity() {
     companion object {
@@ -25,12 +27,35 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val list: RecyclerView = findViewById(R.id.text_note_list)
-        list.adapter = TextNoteAdapter(applicationContext)
+        val layoutManager = LinearLayoutManager(this).apply {
+            reverseLayout = true  // Inverse l'ordre des éléments
+            stackFromEnd = true  // Empêche l'empilement des éléments en bas
+        }
+        list.layoutManager = layoutManager
+
+        list.adapter = object : TextNoteAdapter(applicationContext) {
+            override fun onItemClick(view: View) {
+                    val intent = Intent(applicationContext, TextNoteActivity::class.java).apply {
+                    putExtra(EXTRA_NOTE, view.tag as Int)
+                }
+                startActivity(intent)
+            }
+
+            override fun onLongItemClick(view: View): Boolean {
+                val noteId = view.tag as Int
+                val dialogFragment = DelTextNoteDialogFragment.newInstance(noteId)
+                dialogFragment.show(supportFragmentManager, "deleteDialog")
+
+                return true
+            }
+        }
 
          val createButton = findViewById<FloatingActionButton>(R.id.create_button)
 
         createButton.setOnClickListener { view ->
-            val intent = Intent(this, TextNoteActivity::class.java)
+            val intent = Intent(this, TextNoteActivity::class.java).apply {
+                putExtra(EXTRA_NOTE, -1)
+            }
             startActivity(intent)
         }
 
