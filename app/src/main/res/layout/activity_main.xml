@@ -21,6 +21,99 @@
             android:layout_margin="10dp"
             />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_background"
+            android:orientation="vertical"
+            android:layout_margin="14dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:scrollbars="vertical"
+            android:backgroundTint="@color/design_default_color_primary">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/fav_buton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
+
+                <ImageView
+                    android:id="@+id/fav_icon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_fav"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                <TextView
+                    android:id="@+id/fav_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Favoris"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    app:layout_constraintStart_toEndOf="@id/fav_icon"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/arrow_fav"
+                    android:layout_marginStart="10dp"
+                    android:textSize="18dp"
+                    />
+
+                <ImageView
+                    android:id="@+id/arrow_fav"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_arrow_right"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/all_buton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
+
+                <ImageView
+                    android:id="@+id/all_icon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_folder"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                <TextView
+                    android:id="@+id/all_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Toutes les notes"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    app:layout_constraintStart_toEndOf="@id/all_icon"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/arrow_all"
+                    android:layout_marginStart="10dp"
+                    android:textSize="18dp"
+                    />
+
+                <ImageView
+                    android:id="@+id/arrow_all"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_arrow_right"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id='@+id/recycler_view_main'
             android:layout_width="match_parent"

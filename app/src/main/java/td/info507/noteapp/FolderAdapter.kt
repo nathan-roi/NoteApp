@@ -1,35 +1,41 @@
 package td.info507.noteapp
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import td.info507.noteapp.model.Folder
 
-class FolderAdapter(private val folderList: List<Folder>) : RecyclerView.Adapter<FolderAdapter.FolderViewHolder>() {
+class FolderAdapter(
+    private val folderList: List<Folder>,
+    private val onItemClick: (Folder) -> Unit // Ajout d'un paramètre pour le callback de clic
+) : RecyclerView.Adapter<FolderAdapter.FolderViewHolder>() {
 
-    // ViewHolder class to hold the references to the views in item_folder.xml
+    // ViewHolder pour gérer les éléments de la liste
     class FolderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var folderIcon: ImageView = itemView.findViewById(R.id.folder_icon)
-        var folderTitle: TextView = itemView.findViewById(R.id.folder_title)
-        var arrowIcon: ImageView = itemView.findViewById(R.id.arrow_icon)
+        val titleTextView: TextView = itemView.findViewById(R.id.folder_title)
     }
 
-    // Inflates the item_folder.xml layout for each item in the RecyclerView
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FolderViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_folder, parent, false)
         return FolderViewHolder(view)
     }
 
-    // Binds the data to the views in the ViewHolder
     override fun onBindViewHolder(holder: FolderViewHolder, position: Int) {
-        holder.folderTitle.text = "test"
+        val folder = folderList[position]
+        holder.titleTextView.text = folder.title
+
+        // Vérification du titre du dossier
+        Log.d("FolderAdapter", "Title: ${folder.title}")
+
+        // Gestion du clic sur l'élément
+        holder.itemView.setOnClickListener {
+            onItemClick(folder) // Appelle la fonction callback avec le Folder cliqué
+        }
     }
 
-    // Returns the size of the list
-    override fun getItemCount(): Int {
-        return 3
-    }
+
+    override fun getItemCount(): Int = folderList.size
 }

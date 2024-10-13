@@ -1,5 +1,6 @@
 package td.info507.noteapp
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -23,8 +24,14 @@ class FolderActivity : AppCompatActivity() {
             Folder(1, "Another folder")
         )
 
-        // Configuration de l'adaptateur
-        val adapter = FolderAdapter(folderList)
+        // Configuration de l'adaptateur avec un écouteur de clic
+        val adapter = FolderAdapter(folderList) { folder ->
+            // Action à effectuer lors du clic sur un élément
+            val intent = Intent(this, FolderDetailActivity::class.java)
+            intent.putExtra("folderId", folder.id)
+            intent.putExtra("folderTitle", folder.title)
+            startActivity(intent)
+        }
         recyclerView.adapter = adapter
 
         // Ajouter une ligne de séparation

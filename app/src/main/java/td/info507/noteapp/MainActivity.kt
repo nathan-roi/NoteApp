@@ -20,20 +20,24 @@ class MainActivity : AppCompatActivity() {
         val folderList = listOf(
             Folder(0, "Dossier 1", listOf(Folder(0, "Sous-dossier 1"), Folder(1, "Sous-dossier 2"))),
             Folder(1, "Dossier 2", listOf(Folder(2, "Sous-dossier 3"))),
-            Folder(2, "Dossier 3", emptyList()),
-            Folder(3, "Dossier 3", emptyList()),
-            Folder(4, "Dossier 3", emptyList()),
-            Folder(5, "Dossier 3", emptyList()),
-            Folder(6, "Dossier 3", emptyList())
+            Folder(2, "Dossier 3", listOf(Folder(2, "Sous-dossier 4"),Folder(3, "Sous-dossier 5"),Folder(4, "Sous-dossier 5"))),
         )
 
         // Initialiser le RecyclerView principal
         val folderRecyclerView: RecyclerView = findViewById(R.id.recycler_view_main)
         folderRecyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Créer et définir l'adaptateur pour le RecyclerView principal
-        val folderAdapter = MainFolderAdapter(folderList)
-        folderRecyclerView.adapter = folderAdapter
+        // Création de l'adaptateur avec gestion du clic sur les sous-dossiers
+        val mainFolderAdapter = MainFolderAdapter(folderList) { subFolder ->
+            // Action à effectuer lors du clic sur un sous-dossier
+            val intent = Intent(this, FolderDetailActivity::class.java)
+            intent.putExtra("folderId", subFolder.id)
+            intent.putExtra("folderTitle", subFolder.title)
+            startActivity(intent)
+        }
+
+        // Assigner l'adaptateur au RecyclerView
+        folderRecyclerView.adapter = mainFolderAdapter
 
         // FloatingActionButton pour ajouter un dossier
         val button = findViewById<FloatingActionButton>(R.id.add_button)
@@ -42,6 +46,7 @@ class MainActivity : AppCompatActivity() {
             CardDialogFragment().show(supportFragmentManager, null)
         }
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.

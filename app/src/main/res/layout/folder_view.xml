@@ -16,11 +16,11 @@
         android:layout_margin="15dp">
 
         <TextView
-            android:id="@+id/title_folder"
+            android:id="@+id/folder_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
-            android:text="TEST D'AFFICHAGE"
+            android:text="Titre du Dossier"
             android:textStyle="bold"
             android:textSize="20dp"
             />
@@ -32,6 +32,7 @@
             android:background="@drawable/rounded_background"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
+            android:layout_marginBottom="8dp"
             android:scrollbars="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
