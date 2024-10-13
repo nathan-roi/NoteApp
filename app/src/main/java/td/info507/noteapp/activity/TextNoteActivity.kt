@@ -21,9 +21,10 @@ class TextNoteActivity: AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val extraNote = intent.getIntExtra(MainActivity.EXTRA_NOTE, 0)
-        Log.d("NewNote", extraNote.toString())
+
         if (extraNote >= 0){
             val textNote = TextNoteStorage.get(applicationContext).find(intent.getIntExtra(MainActivity.EXTRA_NOTE, 0))!!
+
             val title = findViewById<TextView>(R.id.title_note)
             val text = findViewById<TextView>(R.id.text_note)
 
@@ -47,13 +48,13 @@ class TextNoteActivity: AppCompatActivity() {
 
             val extraNote = intent.getIntExtra(MainActivity.EXTRA_NOTE, 0)
 
-            if (extraNote >= 0) { // Si la note existe on supprime l'existante et on met à jour les nouvelles données
+            if (extraNote >= 0) { // Si la note existe on update celle-ci
                 val textNote = TextNoteStorage.get(applicationContext)
                     .find(intent.getIntExtra(MainActivity.EXTRA_NOTE, 0))!!
                 val idCourant = textNote.id
 
-                TextNoteStorage.get(applicationContext).delete(idCourant)
-                TextNoteStorage.get(applicationContext).insert(
+                TextNoteStorage.get(applicationContext).update(
+                    idCourant,
                     TextNote(
                         idCourant,
                         findViewById<EditText>(R.id.title_note).text.toString(),
@@ -73,26 +74,6 @@ class TextNoteActivity: AppCompatActivity() {
                 Toast.makeText(applicationContext, "Saved !", Toast.LENGTH_SHORT).show()
             }
         }
-
-
-    }
-
-
-    private fun noteExist(idCourant: Int): Boolean {
-        var exist = false
-
-        val allNotes = TextNoteStorage.get(applicationContext).findAll()
-        val allIds: MutableList<Int> = mutableListOf(allNotes.size)
-
-        for (note in allNotes){
-            allIds.add(note.id)
-        }
-
-        if (allIds.contains(idCourant)){
-            exist = true
-        }
-
-        return exist
     }
 
     private fun updateTextNote(){

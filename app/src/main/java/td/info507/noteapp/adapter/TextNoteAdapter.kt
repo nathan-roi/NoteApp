@@ -11,6 +11,7 @@ import android.widget.NumberPicker
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import td.info507.noteapp.R
+import td.info507.noteapp.model.TextNote
 import td.info507.noteapp.storage.TextNoteStorage
 
 abstract class TextNoteAdapter(private val context: Context): RecyclerView.Adapter<TextNoteAdapter.TextNoteHolder>() {
@@ -20,12 +21,14 @@ abstract class TextNoteAdapter(private val context: Context): RecyclerView.Adapt
 
     }
 
-    abstract fun onItemClick(view: View)
 
+    abstract fun onItemClick(view: View)
     abstract fun onLongItemClick(view: View): Boolean
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TextNoteHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_text_note, parent, false)
+
         view.setOnClickListener{ view ->
             onItemClick(view)
         }
@@ -42,5 +45,11 @@ abstract class TextNoteAdapter(private val context: Context): RecyclerView.Adapt
     }
     override fun getItemCount(): Int {
         return TextNoteStorage.get(context).size()
+    }
+
+    // Méthode pour supprimer une note par ID
+    fun removeNoteById(noteId: Int): Int {
+        TextNoteStorage.get(context).delete(noteId)
+        return noteId
     }
 }

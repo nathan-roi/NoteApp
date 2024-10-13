@@ -14,19 +14,20 @@ import td.info507.noteapp.activity.TextNoteActivity
 import td.info507.noteapp.adapter.TextNoteAdapter
 import td.info507.noteapp.request.NoteListRequest
 import td.info507.noteapp.storage.TextNoteStorage
+import td.info507.noteapp.storage.Updatable
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), Updatable {
     companion object {
         const val EXTRA_NOTE = "EXTRA_NOTE"
     }
 
-    private lateinit var list: RecyclerView
+    private lateinit var list:RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val list: RecyclerView = findViewById(R.id.text_note_list)
+        list = findViewById(R.id.text_note_list)
         val layoutManager = LinearLayoutManager(this).apply {
             reverseLayout = true  // Inverse l'ordre des éléments
             stackFromEnd = true  // Empêche l'empilement des éléments en bas
@@ -43,12 +44,14 @@ class MainActivity : AppCompatActivity() {
 
             override fun onLongItemClick(view: View): Boolean {
                 val noteId = view.tag as Int
-                val dialogFragment = DelTextNoteDialogFragment.newInstance(noteId)
+                val dialogFragment = DelTextNoteDialogFragment(noteId, this@MainActivity)
                 dialogFragment.show(supportFragmentManager, "deleteDialog")
-
                 return true
             }
         }
+
+
+
 
          val createButton = findViewById<FloatingActionButton>(R.id.create_button)
 
@@ -67,6 +70,7 @@ class MainActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -76,4 +80,9 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    override fun update(){
+        list.adapter?.notifyDataSetChanged()
+    }
+
 }
