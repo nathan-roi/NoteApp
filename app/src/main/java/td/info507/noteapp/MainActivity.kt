@@ -8,33 +8,40 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import td.info507.myppoker.storage.utility.Updatable
 import td.info507.noteapp.model.Folder
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), Updatable {
+    private lateinit var folderStorage: FolderJSONFileStorage // Déclaration
+    private lateinit var folderRecyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Initialiser folderStorage
+        folderStorage = FolderJSONFileStorage(this)
+
         // Exemple de données avec des sous-dossiers pour chaque dossier
         val folderList = listOf(
-            Folder(0, "Dossier 1", listOf(Folder(0, "Sous-dossier 1"), Folder(1, "Sous-dossier 2"))),
-            Folder(1, "Dossier 2", listOf(Folder(2, "Sous-dossier 3"))),
-            Folder(2, "Dossier 3", listOf(Folder(2, "Sous-dossier 4"),Folder(3, "Sous-dossier 5"),Folder(4, "Sous-dossier 5"))),
+            Folder(0, "Dossiers", listOf(Folder(0, "Sous-dossier 1"), Folder(1, "Sous-dossier 2"))),
+            Folder(1, "Dossiers 2", listOf(Folder(0, "Sous-dossier 1"))),
+            Folder(2, "Dossiers 3", listOf(Folder(0, "Sous-dossier 1")))
         )
 
         // Initialiser le RecyclerView principal
-        val folderRecyclerView: RecyclerView = findViewById(R.id.recycler_view_main)
+        folderRecyclerView = findViewById(R.id.recycler_view_main)
         folderRecyclerView.layoutManager = LinearLayoutManager(this)
 
         // Création de l'adaptateur avec gestion du clic sur les sous-dossiers
-        val mainFolderAdapter = MainFolderAdapter(folderList) { subFolder ->
-            // Action à effectuer lors du clic sur un sous-dossier
-            val intent = Intent(this, FolderDetailActivity::class.java)
-            intent.putExtra("folderId", subFolder.id)
-            intent.putExtra("folderTitle", subFolder.title)
-            startActivity(intent)
-        }
+        val mainFolderAdapter = MainFolderAdapter(folderList, applicationContext)
+//        { subFolder ->
+//            // Action à effectuer lors du clic sur un sous-dossier
+//            val intent = Intent(this, FolderDetailActivity::class.java)
+//            intent.putExtra("folderId", subFolder.id)
+//            intent.putExtra("folderTitle", subFolder.title)
+//            startActivity(intent)
+//        }
 
         // Assigner l'adaptateur au RecyclerView
         folderRecyclerView.adapter = mainFolderAdapter
@@ -43,7 +50,8 @@ class MainActivity : AppCompatActivity() {
         val button = findViewById<FloatingActionButton>(R.id.add_button)
         button.setOnClickListener {
             // Ouvrir le CardDialogFragment
-            CardDialogFragment().show(supportFragmentManager, null)
+            val dialogFragment = AddDialogFragment(this)
+            dialogFragment.show(supportFragmentManager, "deleteDialog")
         }
     }
 
@@ -64,11 +72,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-  //  override fun onSupportNavigateUp(): Boolean {
- //       val navController = findNavController(R.id.nav_host_fragment_content_main)
- //       return navController.navigateUp(appBarConfiguration)
- //               || super.onSupportNavigateUp()
- //   }
+    override fun update(){
+        folderRecyclerView.adapter?.notifyDataSetChanged()
+    }
 }
 
 

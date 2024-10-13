@@ -1,16 +1,22 @@
 package td.info507.noteapp
 
+import android.content.Context
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import td.info507.noteapp.model.Folder
+import td.info507.noteapp.utility.FolderStorage
 
 class MainFolderAdapter(
-    private val folderList: List<Folder>,
-    private val onSubFolderClick: (Folder) -> Unit
+    private var folderList: List<Folder>,
+//    private val onSubFolderClick: (Folder) -> Unit
+    private val context : Context
 ) : RecyclerView.Adapter<MainFolderAdapter.MainFolderViewHolder>() {
 
     // ViewHolder avec le TextView pour le titre du dossier principal et le RecyclerView pour les sous-dossiers
@@ -25,22 +31,36 @@ class MainFolderAdapter(
     }
 
     override fun onBindViewHolder(holder: MainFolderViewHolder, position: Int) {
-        val folder = folderList[position]
+        val folder = FolderStorage.get(context).findAll().get(position)
 
         // Définir le titre du dossier principal
         holder.folderTitleTextView.text = folder.title
 
-        // Configurer le RecyclerView des sous-dossiers avec gestion des clics
-        val subFolderAdapter = FolderAdapter(folder.subFolders) { subFolder ->
-            // Appel du callback lorsqu'un sous-dossier est cliqué
-            onSubFolderClick(subFolder)
+        val subFolderAdapter = object : FolderAdapter(folder.subFolders, context) {
+            override fun onItemClick(view: View) {
+                val folderId = view.tag as Int
+                Log.d("CLICK", "a cliquer $folderId")
+
+                val intent = Intent(context, FolderDetailActivity::class.java).apply{
+                    putExtra("folderId", folderId)
+                    putExtra("folderTitle", folder.title)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                context.startActivity(intent)
+            }
         }
+
         holder.subFolderRecyclerView.layoutManager = LinearLayoutManager(holder.itemView.context)
         holder.subFolderRecyclerView.adapter = subFolderAdapter
     }
 
     override fun getItemCount(): Int {
-        return folderList.size
+        return 1
+    }
+
+    fun updateFolders(newFolders: List<Folder>) {
+        folderList = newFolders
+        notifyDataSetChanged()
     }
 }
 

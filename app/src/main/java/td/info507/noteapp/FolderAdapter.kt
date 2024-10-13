@@ -1,41 +1,41 @@
 package td.info507.noteapp
 
-import android.util.Log
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import td.info507.noteapp.model.Folder
+import td.info507.noteapp.utility.FolderStorage
 
-class FolderAdapter(
-    private val folderList: List<Folder>,
-    private val onItemClick: (Folder) -> Unit // Ajout d'un paramètre pour le callback de clic
-) : RecyclerView.Adapter<FolderAdapter.FolderViewHolder>() {
+abstract class FolderAdapter(private val folderList: List<Folder>, private val context: Context) : RecyclerView.Adapter<FolderAdapter.FolderViewHolder>() {
 
-    // ViewHolder pour gérer les éléments de la liste
+    abstract fun onItemClick(view: View)
+
+    // ViewHolder class to hold the references to the views in item_folder.xml
     class FolderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val titleTextView: TextView = itemView.findViewById(R.id.folder_title)
+        val folderIcon: ImageView = itemView.findViewById(R.id.folder_icon)
+        val folderTitle: TextView = itemView.findViewById(R.id.folder_title)
+        val arrowIcon: ImageView = itemView.findViewById(R.id.arrow_icon)
     }
 
+    // Inflates the item_folder.xml layout for each item in the RecyclerView
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FolderViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_folder, parent, false)
+        view.setOnClickListener{ view ->
+            onItemClick(view)
+        }
         return FolderViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: FolderViewHolder, position: Int) {
-        val folder = folderList[position]
-        holder.titleTextView.text = folder.title
-
-        // Vérification du titre du dossier
-        Log.d("FolderAdapter", "Title: ${folder.title}")
-
-        // Gestion du clic sur l'élément
-        holder.itemView.setOnClickListener {
-            onItemClick(folder) // Appelle la fonction callback avec le Folder cliqué
-        }
+        val folder = FolderStorage.get(context).findAll().get(position)
+        holder.itemView.tag = folder.id
+        holder.folderTitle.text = folder.title
     }
-
-
-    override fun getItemCount(): Int = folderList.size
+    override fun getItemCount(): Int {
+        return FolderStorage.get(context).size()
+    }
 }
