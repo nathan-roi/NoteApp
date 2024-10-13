@@ -15,6 +15,7 @@ import td.info507.noteapp.model.TextNote
 import td.info507.noteapp.storage.TextNoteStorage
 
 abstract class TextNoteAdapter(private val context: Context): RecyclerView.Adapter<TextNoteAdapter.TextNoteHolder>() {
+
     class TextNoteHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.findViewById(R.id.title_note)
         val text: TextView = itemView.findViewById(R.id.text_note)

@@ -30,13 +30,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".activity.TextNoteActivity"
+            android:name=".activity.ListTextNotes"
             android:exported="true"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="td.info507.noteapp.MainActivity"/>
+        </activity>
+
+        <activity
+            android:name=".activity.TextNoteActivity"
+            android:exported="true"
+            android:parentActivityName=".activity.ListTextNotes">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="td.info507.noteapp.activity.ListTextNotes"/>
         </activity>
     </application>
 

@@ -8,60 +8,28 @@ import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import td.info507.noteapp.activity.ListTextNotes
 import td.info507.noteapp.activity.TextNoteActivity
 import td.info507.noteapp.adapter.TextNoteAdapter
 import td.info507.noteapp.request.NoteListRequest
 import td.info507.noteapp.storage.TextNoteStorage
 import td.info507.noteapp.storage.Updatable
 
-class MainActivity : AppCompatActivity(), Updatable {
-    companion object {
-        const val EXTRA_NOTE = "EXTRA_NOTE"
-    }
-
-    private lateinit var list:RecyclerView
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        list = findViewById(R.id.text_note_list)
-        val layoutManager = LinearLayoutManager(this).apply {
-            reverseLayout = true  // Inverse l'ordre des éléments
-            stackFromEnd = true  // Empêche l'empilement des éléments en bas
-        }
-        list.layoutManager = layoutManager
-
-        list.adapter = object : TextNoteAdapter(applicationContext) {
-            override fun onItemClick(view: View) {
-                val intent = Intent(applicationContext, TextNoteActivity::class.java).apply {
-                    putExtra(EXTRA_NOTE, view.tag as Int)
-                }
-                startActivity(intent)
-            }
-
-            override fun onLongItemClick(view: View): Boolean {
-                val textNoteId = view.tag as Int
-                val dialogFragment = DelTextNoteDialogFragment(textNoteId, this@MainActivity)
-                dialogFragment.show(supportFragmentManager, "deleteDialog")
-                return true
-            }
-        }
-
-
-         val createButton = findViewById<FloatingActionButton>(R.id.create_button)
-
-        createButton.setOnClickListener { view ->
-            val intent = Intent(this, TextNoteActivity::class.java).apply {
-                putExtra(EXTRA_NOTE, -1)
-            }
+        val allNotesButton = findViewById<ConstraintLayout>(R.id.all_buton)
+        allNotesButton.setOnClickListener{
+            val intent = Intent(applicationContext, ListTextNotes::class.java)
             startActivity(intent)
         }
-
-        NoteListRequest(applicationContext)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -78,10 +46,5 @@ class MainActivity : AppCompatActivity(), Updatable {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    override fun textNoteRemoved(position: Int){
-        list.adapter?.notifyItemRemoved(position)
-//        list.adapter?.notifyDataSetChanged()
     }
 }

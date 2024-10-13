@@ -20,10 +20,10 @@ class TextNoteActivity: AppCompatActivity() {
         setContentView(R.layout.text_note)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val extraNote = intent.getIntExtra(MainActivity.EXTRA_NOTE, 0)
+        val extraNote = intent.getIntExtra(ListTextNotes.EXTRA_NOTE, 0)
 
         if (extraNote >= 0){
-            val textNote = TextNoteStorage.get(applicationContext).find(intent.getIntExtra(MainActivity.EXTRA_NOTE, 0))!!
+            val textNote = TextNoteStorage.get(applicationContext).find(intent.getIntExtra(ListTextNotes.EXTRA_NOTE, 0))!!
 
             val title = findViewById<TextView>(R.id.title_note)
             val text = findViewById<TextView>(R.id.text_note)
@@ -46,11 +46,11 @@ class TextNoteActivity: AppCompatActivity() {
 
         if (title != "" || text != "") {
 
-            val extraNote = intent.getIntExtra(MainActivity.EXTRA_NOTE, 0)
+            val extraNote = intent.getIntExtra(ListTextNotes.EXTRA_NOTE, 0)
 
             if (extraNote >= 0) { // Si la note existe on update celle-ci
                 val textNote = TextNoteStorage.get(applicationContext)
-                    .find(intent.getIntExtra(MainActivity.EXTRA_NOTE, 0))!!
+                    .find(intent.getIntExtra(ListTextNotes.EXTRA_NOTE, 0))!!
                 val idCourant = textNote.id
 
                 TextNoteStorage.get(applicationContext).update(
@@ -74,32 +74,5 @@ class TextNoteActivity: AppCompatActivity() {
                 Toast.makeText(applicationContext, "Saved !", Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    private fun updateTextNote(){
-        var titleNote = findViewById<EditText>(R.id.title_note)
-        var textNote = findViewById<EditText>(R.id.text_note)
-
-        titleNote.text = TextNoteStorage.getTitle(applicationContext)
-        titleNote.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun afterTextChanged(title: Editable?) {
-                TextNoteStorage.setTitle(applicationContext, title.toString())
-            }
-        })
-
-        textNote.text = TextNoteStorage.getText(applicationContext)
-        textNote.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun afterTextChanged(text: Editable?) {
-                TextNoteStorage.setText(applicationContext, text.toString())
-            }
-        })
     }
 }

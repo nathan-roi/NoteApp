@@ -8,13 +8,6 @@
     android:background="@color/white"
     tools:context=".MainActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/text_note_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/create_button"
         android:layout_width="wrap_content"
@@ -34,7 +27,7 @@
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:scrollbars="vertical"
-        android:backgroundTint="@color/design_default_color_primary">
+        android:backgroundTint="@color/appPink">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/fav_buton"
