@@ -1,6 +1,7 @@
 package td.info507.noteapp
 
 import android.content.Intent
+import android.icu.text.Transliterator.Position
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -36,21 +37,19 @@ class MainActivity : AppCompatActivity(), Updatable {
 
         list.adapter = object : TextNoteAdapter(applicationContext) {
             override fun onItemClick(view: View) {
-                    val intent = Intent(applicationContext, TextNoteActivity::class.java).apply {
+                val intent = Intent(applicationContext, TextNoteActivity::class.java).apply {
                     putExtra(EXTRA_NOTE, view.tag as Int)
                 }
                 startActivity(intent)
             }
 
             override fun onLongItemClick(view: View): Boolean {
-                val noteId = view.tag as Int
-                val dialogFragment = DelTextNoteDialogFragment(noteId, this@MainActivity)
+                val textNoteId = view.tag as Int
+                val dialogFragment = DelTextNoteDialogFragment(textNoteId, this@MainActivity)
                 dialogFragment.show(supportFragmentManager, "deleteDialog")
                 return true
             }
         }
-
-
 
 
          val createButton = findViewById<FloatingActionButton>(R.id.create_button)
@@ -81,8 +80,8 @@ class MainActivity : AppCompatActivity(), Updatable {
         }
     }
 
-    override fun update(){
-        list.adapter?.notifyDataSetChanged()
+    override fun textNoteRemoved(position: Int){
+        list.adapter?.notifyItemRemoved(position)
+//        list.adapter?.notifyDataSetChanged()
     }
-
 }

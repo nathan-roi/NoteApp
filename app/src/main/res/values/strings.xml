@@ -45,4 +45,5 @@
     </string>
     <string name="success">succès</string>
     <string name="error">erreur</string>
+    <string name="add_something">add something</string>
 </resources>
