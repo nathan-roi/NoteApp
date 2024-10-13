@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import td.info507.noteapp.activity.ListTextNotes
+import td.info507.noteapp.activity.ListTextNotes.Companion.EXTRA_NOTE
 import td.info507.noteapp.activity.TextNoteActivity
 import td.info507.noteapp.adapter.TextNoteAdapter
 import td.info507.noteapp.request.NoteListRequest
@@ -25,12 +26,22 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val allNotesButton = findViewById<ConstraintLayout>(R.id.all_buton)
+        val allNotesButton = findViewById<ConstraintLayout>(R.id.all_buton) // Bouton affichage dossier 'toutes les notes'
         allNotesButton.setOnClickListener{
             val intent = Intent(applicationContext, ListTextNotes::class.java)
             startActivity(intent)
         }
+
+        val createButton = findViewById<FloatingActionButton>(R.id.create_button) // Bouton add a new note
+        createButton.setOnClickListener {
+            val intent = Intent(this, TextNoteActivity::class.java).apply {
+                putExtra(EXTRA_NOTE, -1)
+            }
+            startActivity(intent)
+        }
     }
+
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
