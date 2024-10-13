@@ -1,37 +1,45 @@
 package td.info507.noteapp
 
+import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
-import td.info507.noteapp.databinding.ActivityMainBinding
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import td.info507.noteapp.model.Folder
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var binding: ActivityMainBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        // Exemple de données avec des sous-dossiers pour chaque dossier
+        val folderList = listOf(
+            Folder(0, "Dossier 1", listOf(Folder(0, "Sous-dossier 1"), Folder(1, "Sous-dossier 2"))),
+            Folder(1, "Dossier 2", listOf(Folder(2, "Sous-dossier 3"))),
+            Folder(2, "Dossier 3", emptyList()),
+            Folder(3, "Dossier 3", emptyList()),
+            Folder(4, "Dossier 3", emptyList()),
+            Folder(5, "Dossier 3", emptyList()),
+            Folder(6, "Dossier 3", emptyList())
+        )
 
-        setSupportActionBar(binding.toolbar)
+        // Initialiser le RecyclerView principal
+        val folderRecyclerView: RecyclerView = findViewById(R.id.recycler_view_main)
+        folderRecyclerView.layoutManager = LinearLayoutManager(this)
 
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)
+        // Créer et définir l'adaptateur pour le RecyclerView principal
+        val folderAdapter = MainFolderAdapter(folderList)
+        folderRecyclerView.adapter = folderAdapter
 
-        binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null)
-                .setAnchorView(R.id.fab).show()
+        // FloatingActionButton pour ajouter un dossier
+        val button = findViewById<FloatingActionButton>(R.id.add_button)
+        button.setOnClickListener {
+            // Ouvrir le CardDialogFragment
+            CardDialogFragment().show(supportFragmentManager, null)
         }
     }
 
@@ -51,9 +59,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
-    }
+  //  override fun onSupportNavigateUp(): Boolean {
+ //       val navController = findNavController(R.id.nav_host_fragment_content_main)
+ //       return navController.navigateUp(appBarConfiguration)
+ //               || super.onSupportNavigateUp()
+ //   }
 }
+
+
+// Démarre FolderActivity
+// val intent = Intent(this, FolderActivity::class.java)
+// startActivity(intent)
