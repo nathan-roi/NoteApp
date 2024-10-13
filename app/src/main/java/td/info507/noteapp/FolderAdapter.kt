@@ -12,9 +12,9 @@ class FolderAdapter(private val folderList: List<Folder>) : RecyclerView.Adapter
 
     // ViewHolder class to hold the references to the views in item_folder.xml
     class FolderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val folderIcon: ImageView = itemView.findViewById(R.id.folder_icon)
-        val folderTitle: TextView = itemView.findViewById(R.id.folder_title)
-        val arrowIcon: ImageView = itemView.findViewById(R.id.arrow_icon)
+        var folderIcon: ImageView = itemView.findViewById(R.id.folder_icon)
+        var folderTitle: TextView = itemView.findViewById(R.id.folder_title)
+        var arrowIcon: ImageView = itemView.findViewById(R.id.arrow_icon)
     }
 
     // Inflates the item_folder.xml layout for each item in the RecyclerView
@@ -25,11 +25,11 @@ class FolderAdapter(private val folderList: List<Folder>) : RecyclerView.Adapter
 
     // Binds the data to the views in the ViewHolder
     override fun onBindViewHolder(holder: FolderViewHolder, position: Int) {
-        holder.folderTitle.text = "Ceci est un fichier"
+        holder.folderTitle.text = "test"
     }
 
     // Returns the size of the list
     override fun getItemCount(): Int {
-        return 4
+        return 3
     }
 }
