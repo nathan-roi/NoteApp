@@ -21,14 +21,27 @@ import td.info507.noteapp.storage.TextNoteStorage
 import td.info507.noteapp.storage.Updatable
 
 class MainActivity : AppCompatActivity() {
+    companion object{
+        const val EXTRA_FOLDER = "EXTRA_FOLDER"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val favButton = findViewById<ConstraintLayout>(R.id.fav_buton)
+        favButton.setOnClickListener{
+            val intent = Intent(applicationContext, ListTextNotes::class.java).apply {
+                putExtra(EXTRA_FOLDER, 1)
+            }
+            startActivity(intent)
+        }
+
         val allNotesButton = findViewById<ConstraintLayout>(R.id.all_buton) // Bouton affichage dossier 'toutes les notes'
         allNotesButton.setOnClickListener{
-            val intent = Intent(applicationContext, ListTextNotes::class.java)
+            val intent = Intent(applicationContext, ListTextNotes::class.java).apply {
+                putExtra(EXTRA_FOLDER, 0)
+            }
             startActivity(intent)
         }
 
@@ -42,7 +55,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return super.onCreateOptionsMenu(menu)
@@ -50,9 +62,6 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)

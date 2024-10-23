@@ -13,8 +13,9 @@ import androidx.recyclerview.widget.RecyclerView
 import td.info507.noteapp.R
 import td.info507.noteapp.model.TextNote
 import td.info507.noteapp.storage.TextNoteStorage
+import kotlin.properties.Delegates
 
-abstract class TextNoteAdapter(private val context: Context): RecyclerView.Adapter<TextNoteAdapter.TextNoteHolder>() {
+abstract class TextNoteAdapter(private val context: Context, private val folder: Int, private var listOfNotes: List<TextNote>): RecyclerView.Adapter<TextNoteAdapter.TextNoteHolder>() {
 
     class TextNoteHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.findViewById(R.id.title_note)
@@ -37,12 +38,25 @@ abstract class TextNoteAdapter(private val context: Context): RecyclerView.Adapt
         return TextNoteHolder(view)
     }
     override fun onBindViewHolder(holder: TextNoteHolder, position: Int) {
-        val textNote = TextNoteStorage.get(context).findAll().get(position)
-        holder.itemView.tag = textNote.id
-        holder.title.text = textNote.title
-        holder.text.text = textNote.text
+        var notes = TextNoteStorage.get(context).findAll()
+        if (folder == 1){
+            notes = notes.filter { it.favorite }
+        }
+        if (notes.isNotEmpty()){
+            val textNote = notes.get(position)
+            holder.itemView.tag = textNote.id
+            holder.title.text = textNote.title
+            holder.text.text = textNote.text
+        }
     }
+
     override fun getItemCount(): Int {
-        return TextNoteStorage.get(context).size()
+        var notes = TextNoteStorage.get(context).findAll()
+        if (folder == 1){
+            notes = notes.filter { it.favorite }
+        }
+        return notes.size
     }
 }
+
+// TODO : creer une fonction généraliste pour mettre à jour la liste de notes

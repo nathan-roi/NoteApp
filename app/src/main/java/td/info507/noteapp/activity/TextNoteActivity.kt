@@ -1,9 +1,13 @@
 package td.info507.noteapp.activity
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -14,6 +18,7 @@ import td.info507.noteapp.model.TextNote
 import td.info507.noteapp.storage.TextNoteStorage
 
 class TextNoteActivity: AppCompatActivity() {
+    private lateinit var textOfNote: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,15 +27,19 @@ class TextNoteActivity: AppCompatActivity() {
 
         val extraNote = intent.getIntExtra(ListTextNotes.EXTRA_NOTE, 0)
 
+
+
         if (extraNote >= 0){
-            val textNote = TextNoteStorage.get(applicationContext).find(intent.getIntExtra(ListTextNotes.EXTRA_NOTE, 0))!!
+            val textNote = TextNoteStorage.get(applicationContext).find(intent.getIntExtra(ListTextNotes.EXTRA_NOTE, 0))
 
             val title = findViewById<TextView>(R.id.title_note)
             val text = findViewById<TextView>(R.id.text_note)
 
-            title.text = textNote.title
-            text.text = textNote.text
+            title.text = textNote?.title
+            text.text = textNote?.text
         }
+
+        textOfNote = findViewById<EditText>(R.id.text_note).text.toString()
 
     }
 
@@ -47,18 +56,24 @@ class TextNoteActivity: AppCompatActivity() {
         if (title != "" || text != "") {
 
             val extraNote = intent.getIntExtra(ListTextNotes.EXTRA_NOTE, 0)
+            val courantFolder = intent.getIntExtra(MainActivity.EXTRA_FOLDER, 0)
+            Log.d("EXTRAAA", intent.toString())
+            Log.d("EXTRAAA", extraNote.toString())
 
             if (extraNote >= 0) { // Si la note existe on update celle-ci
                 val textNote = TextNoteStorage.get(applicationContext)
                     .find(intent.getIntExtra(ListTextNotes.EXTRA_NOTE, 0))!!
                 val idCourant = textNote.id
+                val fav = textNote.favorite
 
                 TextNoteStorage.get(applicationContext).update(
                     idCourant,
                     TextNote(
                         idCourant,
                         findViewById<EditText>(R.id.title_note).text.toString(),
-                        findViewById<EditText>(R.id.text_note).text.toString()
+                        findViewById<EditText>(R.id.text_note).text.toString(),
+                        0,
+                        fav
                     )
                 )
                 Toast.makeText(applicationContext, "Saved !", Toast.LENGTH_SHORT).show()
@@ -68,11 +83,46 @@ class TextNoteActivity: AppCompatActivity() {
                     TextNote(
                         0,
                         findViewById<EditText>(R.id.title_note).text.toString(),
-                        findViewById<EditText>(R.id.text_note).text.toString()
+                        findViewById<EditText>(R.id.text_note).text.toString(),
+                        0,
+                        false
                     )
                 )
-                Toast.makeText(applicationContext, "Saved !", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "Enregistré !", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_text_note, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_share -> {
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, textOfNote)
+                    type = "text/plain"
+                }
+                val shareIntent = Intent.createChooser(sendIntent, null)
+                startActivity(shareIntent)
+                true
+            }
+            R.id.action_fav -> {
+                val textNote = TextNoteStorage.get(applicationContext)
+                    .find(intent.getIntExtra(ListTextNotes.EXTRA_NOTE, 0))!!
+                val textNoteId = textNote.id
+
+                TextNoteStorage.get(applicationContext).update(
+                    textNoteId,
+                    TextNote(textNoteId, textNote.title, textNote.text, textNote.parent_folder, true)
+                    )
+                Toast.makeText(applicationContext, "Note mise en favoris", Toast.LENGTH_SHORT).show()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }
