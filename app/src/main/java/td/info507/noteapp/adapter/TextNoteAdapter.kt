@@ -17,6 +17,15 @@ import kotlin.properties.Delegates
 
 abstract class TextNoteAdapter(private val context: Context, private val folder: Int, private var listOfNotes: List<TextNote>): RecyclerView.Adapter<TextNoteAdapter.TextNoteHolder>() {
 
+    fun notesFilter(): List<TextNote> {
+        var notes = TextNoteStorage.get(context).findAll()
+        if (folder == 1){
+            notes = notes.filter { it.favorite }
+        }
+
+        return notes
+    }
+
     class TextNoteHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.findViewById(R.id.title_note)
         val text: TextView = itemView.findViewById(R.id.text_note)
@@ -38,10 +47,8 @@ abstract class TextNoteAdapter(private val context: Context, private val folder:
         return TextNoteHolder(view)
     }
     override fun onBindViewHolder(holder: TextNoteHolder, position: Int) {
-        var notes = TextNoteStorage.get(context).findAll()
-        if (folder == 1){
-            notes = notes.filter { it.favorite }
-        }
+        val notes = notesFilter()
+
         if (notes.isNotEmpty()){
             val textNote = notes.get(position)
             holder.itemView.tag = textNote.id
@@ -51,12 +58,7 @@ abstract class TextNoteAdapter(private val context: Context, private val folder:
     }
 
     override fun getItemCount(): Int {
-        var notes = TextNoteStorage.get(context).findAll()
-        if (folder == 1){
-            notes = notes.filter { it.favorite }
-        }
-        return notes.size
+
+        return notesFilter().size
     }
 }
-
-// TODO : creer une fonction généraliste pour mettre à jour la liste de notes

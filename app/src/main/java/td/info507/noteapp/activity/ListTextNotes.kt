@@ -98,22 +98,6 @@ class ListTextNotes: AppCompatActivity(), Updatable {
         if (folderOfNote == 1){
             newNotes = notes.filter{it.favorite}
         }
-
-//        var newNotes: MutableList<TextNote> = arrayListOf()
-//        Log.d("FAV0", notes.size.toString())
-//
-//        for (note in notes){
-//            Log.d("ESTFAV", note.favorite.toString())
-//            if (folderOfNote == 1 && note.favorite){
-//                newNotes.add(note)
-//            }
-//        }
-//
-//        if (folderOfNote == 0){
-//            newNotes = notes.toMutableList()
-//        }
-//
-//        Log.d("FAV", newNotes.size.toString())
         return newNotes
     }
 }
