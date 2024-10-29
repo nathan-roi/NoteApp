@@ -48,7 +48,7 @@ class ListTextNotes: AppCompatActivity(), Updatable {
         list.adapter = object : TextNoteAdapter(applicationContext, courantFolder) {
             override fun onItemClick(view: View) {
                 val intent = Intent(applicationContext, TextNoteActivity::class.java).apply {
-                    putExtra(EXTRA_NOTE, view.tag as Int)
+                    putExtra(EXTRA_NOTE, view.tag as Int) // l'utilisateur vient de cliquer sur une note déjà existante
                 }
                 startActivity(intent)
             }
@@ -66,7 +66,7 @@ class ListTextNotes: AppCompatActivity(), Updatable {
         createButton.setOnClickListener { view ->
             if (courantFolder != 2){
                 val intent = Intent(this, TextNoteActivity::class.java).apply {
-                    putExtra(EXTRA_NOTE, -1)
+                    putExtra(EXTRA_NOTE, -1) // l'utilisateur veut créer une note
                     putExtra(EXTRA_FOLDER, courantFolder)
                 }
                 startActivity(intent)

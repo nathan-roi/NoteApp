@@ -19,15 +19,22 @@ import kotlin.properties.Delegates
 class TextNoteActivity: AppCompatActivity() {
     private lateinit var textOfNote: String
     private var isFavorite: Boolean = false
+    private var extraNote: Int = -1
+    private var folder: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.text_note)
+        /*
+        Si extraNote = -1 l'utilisateur crée une nouvelle note => title and text vide
+        Si extraNote >= 0 l'utilisateur a cliqué sur une note existante, on affiche donc ce qu'elle contient
 
-        val extraNote = intent.getIntExtra(ListTextNotes.EXTRA_NOTE, 0)
+        */
+        extraNote = intent.getIntExtra(ListTextNotes.EXTRA_NOTE, -1)
+        folder = intent.getIntExtra(MainActivity.EXTRA_FOLDER, 0) // 0 : all notes; 1 : favorites notes; 2 : notes from the cloud
 
         if (extraNote >= 0){
-            val textNote = TextNoteStorage.get(applicationContext).find(intent.getIntExtra(ListTextNotes.EXTRA_NOTE, 0))
+            val textNote = TextNoteStorage.get(applicationContext).find(extraNote)
 
             val title = findViewById<TextView>(R.id.title_note)
             val text = findViewById<TextView>(R.id.text_note)
@@ -54,11 +61,9 @@ class TextNoteActivity: AppCompatActivity() {
 
         if (title != "" || text != "") {
 
-            val extraNote = intent.getIntExtra(ListTextNotes.EXTRA_NOTE, 0)
-
             if (extraNote >= 0) { // Si la note existe on update celle-ci
                 val textNote = TextNoteStorage.get(applicationContext)
-                    .find(intent.getIntExtra(ListTextNotes.EXTRA_NOTE, 0))!!
+                    .find(extraNote)!!
 
                 TextNoteStorage.get(applicationContext).update(
                     textNote.id,
@@ -73,9 +78,9 @@ class TextNoteActivity: AppCompatActivity() {
                 Toast.makeText(applicationContext, "Saved !", Toast.LENGTH_SHORT).show()
 
             } else { // Si la note n'existe pas on en crée une nouvelle
-                val folder = intent.getIntExtra(MainActivity.EXTRA_FOLDER, 0)
-                if (folder == 1){
+                if (folder == 1){ // Si l'utilisateur créer une note depuis un le dossier favoris, alors elle ajouté automatiquement aux favoris
                     isFavorite = true
+
                 }
                 TextNoteStorage.get(applicationContext).insert(
                     TextNote(
@@ -94,7 +99,7 @@ class TextNoteActivity: AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_text_note, menu)
         val iconFav = menu?.findItem(R.id.action_fav)
-        if (isFavorite){
+        if (isFavorite || folder == 1){ // Quand on ouvre une note si elle fait partie des fav alors le coeur est rouge
             iconFav?.setIcon(R.drawable.ic_fav_full)
         }
         return super.onCreateOptionsMenu(menu)
@@ -103,7 +108,7 @@ class TextNoteActivity: AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                finish()
+                finish() // Permet de revenir au dossier pù à été ouvert la note
                 true
             }
             R.id.action_share -> {
@@ -117,24 +122,26 @@ class TextNoteActivity: AppCompatActivity() {
                 true
             }
             R.id.action_fav -> {
-                val textNote = TextNoteStorage.get(applicationContext).find(intent.getIntExtra(ListTextNotes.EXTRA_NOTE, 0))!!
-                val textNoteId = textNote.id
-                if (!textNote.favorite){
-                    TextNoteStorage.get(applicationContext).update(
-                        textNoteId,
-                        TextNote(textNoteId, textNote.title, textNote.text, textNote.parent_folder, true)
-                    )
-                    Toast.makeText(applicationContext, "Note mise en favoris", Toast.LENGTH_SHORT).show()
-                    item.setIcon(R.drawable.ic_fav_full)
-                }else{
-                    TextNoteStorage.get(applicationContext).update(
-                        textNoteId,
-                        TextNote(textNoteId, textNote.title, textNote.text, textNote.parent_folder, false)
-                    )
-                    Toast.makeText(applicationContext, "Note retiré des favoris", Toast.LENGTH_SHORT).show()
-                    item.setIcon(R.drawable.ic_fav)
-                }
+                if (extraNote >= 0){
+                    val textNote = TextNoteStorage.get(applicationContext).find(extraNote)!!
+                    val textNoteId = textNote.id
 
+                    if (!textNote.favorite){ // Si la note est pas fav on l'ajoute aux fav
+                        TextNoteStorage.get(applicationContext).update(
+                            textNoteId,
+                            TextNote(textNoteId, textNote.title, textNote.text, textNote.parent_folder, true)
+                        )
+                        Toast.makeText(applicationContext, "Note mise en favoris", Toast.LENGTH_SHORT).show()
+                        item.setIcon(R.drawable.ic_fav_full)
+                    }else{// si la note est fav on la supprime des fav
+                        TextNoteStorage.get(applicationContext).update(
+                            textNoteId,
+                            TextNote(textNoteId, textNote.title, textNote.text, textNote.parent_folder, false)
+                        )
+                        Toast.makeText(applicationContext, "Note retirée des favoris", Toast.LENGTH_SHORT).show()
+                        item.setIcon(R.drawable.ic_fav)
+                    }
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)
