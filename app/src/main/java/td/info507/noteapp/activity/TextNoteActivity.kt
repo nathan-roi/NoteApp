@@ -109,8 +109,8 @@ class TextNoteActivity: AppCompatActivity(){
         return when (item.itemId) {
             android.R.id.home -> {
                 val intent = Intent(applicationContext, ListTextNotes::class.java)
-                finish() // Ferme l'activité
                 startActivity(intent) // Relance l'activité ListeTextNotes et met donc à jour le RecyclerView (pas très opti mais ça fonctionne)
+                finish() // Ferme l'activité
                 true
             }
             R.id.action_share -> {
