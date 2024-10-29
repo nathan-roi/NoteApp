@@ -14,9 +14,10 @@ import td.info507.noteapp.MainActivity
 import td.info507.noteapp.R
 import td.info507.noteapp.model.TextNote
 import td.info507.noteapp.storage.TextNoteStorage
+import td.info507.noteapp.storage.Updatable
 import kotlin.properties.Delegates
 
-class TextNoteActivity: AppCompatActivity() {
+class TextNoteActivity: AppCompatActivity(){
     private lateinit var textOfNote: String
     private var isFavorite: Boolean = false
     private var extraNote: Int = -1
@@ -28,7 +29,6 @@ class TextNoteActivity: AppCompatActivity() {
         /*
         Si extraNote = -1 l'utilisateur crée une nouvelle note => title and text vide
         Si extraNote >= 0 l'utilisateur a cliqué sur une note existante, on affiche donc ce qu'elle contient
-
         */
         extraNote = intent.getIntExtra(ListTextNotes.EXTRA_NOTE, -1)
         folder = intent.getIntExtra(MainActivity.EXTRA_FOLDER, 0) // 0 : all notes; 1 : favorites notes; 2 : notes from the cloud
@@ -75,7 +75,7 @@ class TextNoteActivity: AppCompatActivity() {
                         textNote.favorite
                     )
                 )
-                Toast.makeText(applicationContext, "Saved !", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "Enregistré !", Toast.LENGTH_SHORT).show()
 
             } else { // Si la note n'existe pas on en crée une nouvelle
                 if (folder == 1){ // Si l'utilisateur créer une note depuis un le dossier favoris, alors elle ajouté automatiquement aux favoris
@@ -108,7 +108,9 @@ class TextNoteActivity: AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                finish() // Permet de revenir au dossier pù à été ouvert la note
+                val intent = Intent(applicationContext, ListTextNotes::class.java)
+                finish() // Ferme l'activité
+                startActivity(intent) // Relance l'activité ListeTextNotes et met donc à jour le RecyclerView (pas très opti mais ça fonctionne)
                 true
             }
             R.id.action_share -> {
