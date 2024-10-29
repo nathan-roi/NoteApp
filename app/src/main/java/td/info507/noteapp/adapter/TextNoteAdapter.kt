@@ -20,7 +20,7 @@ import kotlin.properties.Delegates
 
 abstract class TextNoteAdapter(private val context: Context, private val folder: Int): RecyclerView.Adapter<TextNoteAdapter.TextNoteHolder>() {
 
-    fun notesFilter(): List<TextNote> {
+    private fun notesFilter(): List<TextNote> {
         var notes = TextNoteStorage.get(context).findAll()
 
         if (folder == 0){
@@ -30,7 +30,6 @@ abstract class TextNoteAdapter(private val context: Context, private val folder:
         }else if (folder == 2){
             notes = notes.filter{ it.parent_folder == 2 }
         }
-
         return notes
     }
 
