@@ -17,7 +17,7 @@ class DelTextNoteDialogFragment(private val textNoteId: Int, private val updatab
             .setMessage("Êtes-vous sûr de vouloir supprimer cette note ?")
             .setPositiveButton("Supprimer") { _, _ ->
                 TextNoteStorage.get(requireContext()).delete(textNoteId)
-                updatable.textNoteRemoved()
+                updatable.update()
             }
             .setNegativeButton("Annuler", null)
             .create()

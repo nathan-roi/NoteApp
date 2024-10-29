@@ -6,10 +6,12 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import org.json.JSONObject
 import td.info507.noteapp.DelTextNoteDialogFragment
 import td.info507.noteapp.MainActivity
 import td.info507.noteapp.MainActivity.Companion.EXTRA_FOLDER
@@ -41,7 +43,7 @@ class ListTextNotes: AppCompatActivity(), Updatable {
         }
         list.layoutManager = layoutManager
 
-        list.adapter = object : TextNoteAdapter(applicationContext, courantFolder, listOfNotes()) {
+        list.adapter = object : TextNoteAdapter(applicationContext, courantFolder) {
             override fun onItemClick(view: View) {
                 val intent = Intent(applicationContext, TextNoteActivity::class.java).apply {
                     putExtra(EXTRA_NOTE, view.tag as Int)
@@ -60,14 +62,20 @@ class ListTextNotes: AppCompatActivity(), Updatable {
         val createButton = findViewById<FloatingActionButton>(R.id.create_button)
 
         createButton.setOnClickListener { view ->
-            val intent = Intent(this, TextNoteActivity::class.java).apply {
-                putExtra(EXTRA_NOTE, -1)
-                putExtra(EXTRA_FOLDER, courantFolder)
+            if (courantFolder != 2){
+                val intent = Intent(this, TextNoteActivity::class.java).apply {
+                    putExtra(EXTRA_NOTE, -1)
+                    putExtra(EXTRA_FOLDER, courantFolder)
+                }
+                startActivity(intent)
+            }else{
+                createButton.hide()
             }
-            startActivity(intent)
         }
 
-        NoteListRequest(applicationContext)
+        if (courantFolder == 2){ // Si le dossier ouvert est le dossier cloud alors les notes stockées sur le cloud sont chargées
+            NoteListRequest(applicationContext, this)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -86,18 +94,7 @@ class ListTextNotes: AppCompatActivity(), Updatable {
         }
     }
 
-    override fun textNoteRemoved(){
+    override fun update(){
         list.adapter?.notifyDataSetChanged()
-    }
-
-    private fun listOfNotes(): List<TextNote> {
-        val folderOfNote = intent.getIntExtra(MainActivity.EXTRA_FOLDER, 0)
-        val notes = TextNoteStorage.get(applicationContext).findAll()
-        var newNotes = notes
-
-        if (folderOfNote == 1){
-            newNotes = notes.filter{it.favorite}
-        }
-        return newNotes
     }
 }

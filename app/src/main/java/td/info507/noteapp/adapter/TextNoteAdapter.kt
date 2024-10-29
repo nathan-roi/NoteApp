@@ -12,15 +12,18 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import td.info507.noteapp.R
 import td.info507.noteapp.model.TextNote
+import td.info507.noteapp.request.NoteListRequest
 import td.info507.noteapp.storage.TextNoteStorage
 import kotlin.properties.Delegates
 
-abstract class TextNoteAdapter(private val context: Context, private val folder: Int, private var listOfNotes: List<TextNote>): RecyclerView.Adapter<TextNoteAdapter.TextNoteHolder>() {
+abstract class TextNoteAdapter(private val context: Context, private val folder: Int): RecyclerView.Adapter<TextNoteAdapter.TextNoteHolder>() {
 
     fun notesFilter(): List<TextNote> {
         var notes = TextNoteStorage.get(context).findAll()
         if (folder == 1){
             notes = notes.filter { it.favorite }
+        }else if (folder == 2){
+            notes = notes.filter{ it.parent_folder == 2 }
         }
 
         return notes
@@ -58,7 +61,6 @@ abstract class TextNoteAdapter(private val context: Context, private val folder:
     }
 
     override fun getItemCount(): Int {
-
         return notesFilter().size
     }
 }

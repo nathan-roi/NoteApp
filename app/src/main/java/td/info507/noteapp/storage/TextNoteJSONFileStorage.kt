@@ -13,6 +13,7 @@ class TextNoteJSONFileStorage(context: Context): JSONFileStorage<TextNote>(conte
     override fun create(id: Int, obj: TextNote): TextNote {
         return TextNote(id, obj.title, obj.text, obj.parent_folder, obj.favorite)
     }
+
     override fun objectToJson(id: Int, obj: TextNote): JSONObject {
         val json = JSONObject()
         json.put(TextNote.ID, id)

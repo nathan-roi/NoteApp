@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -41,6 +42,14 @@ class MainActivity : AppCompatActivity() {
         allNotesButton.setOnClickListener{
             val intent = Intent(applicationContext, ListTextNotes::class.java).apply {
                 putExtra(EXTRA_FOLDER, 0)
+            }
+            startActivity(intent)
+        }
+
+        val cloudNotesButton = findViewById<ConstraintLayout>(R.id.cloud_button)
+        cloudNotesButton.setOnClickListener{
+            val intent = Intent(applicationContext, ListTextNotes::class.java).apply{
+                putExtra(EXTRA_FOLDER, 2)
             }
             startActivity(intent)
         }
