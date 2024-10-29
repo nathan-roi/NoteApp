@@ -22,18 +22,16 @@ abstract class TextNoteAdapter(private val context: Context, private val folder:
 
     fun notesFilter(): List<TextNote> {
         var notes = TextNoteStorage.get(context).findAll()
-        if (folder == 1){
+
+        if (folder == 0){
+            notes = notes.filter { it.parent_folder != 2 }
+        }else if (folder == 1){
             notes = notes.filter { it.favorite }
         }else if (folder == 2){
             notes = notes.filter{ it.parent_folder == 2 }
         }
 
         return notes
-    }
-
-    fun titleColorCloudNote(title: TextView){
-        title.setTextColor(ContextCompat.getColor(context, R.color.skyBlue))
-
     }
 
     class TextNoteHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -63,15 +61,10 @@ abstract class TextNoteAdapter(private val context: Context, private val folder:
             holder.itemView.tag = textNote.id
             holder.title.text = textNote.title
             holder.text.text = textNote.text
-            if (textNote.parent_folder == 2){
-                titleColorCloudNote(holder.title)
-            }
         }
     }
 
     override fun getItemCount(): Int {
         return notesFilter().size
     }
-
-
 }
