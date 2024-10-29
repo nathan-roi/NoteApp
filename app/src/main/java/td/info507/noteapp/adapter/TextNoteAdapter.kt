@@ -9,8 +9,10 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.NumberPicker
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import td.info507.noteapp.R
+import td.info507.noteapp.activity.ListTextNotes
 import td.info507.noteapp.model.TextNote
 import td.info507.noteapp.request.NoteListRequest
 import td.info507.noteapp.storage.TextNoteStorage
@@ -29,10 +31,14 @@ abstract class TextNoteAdapter(private val context: Context, private val folder:
         return notes
     }
 
+    fun titleColorCloudNote(title: TextView){
+        title.setTextColor(ContextCompat.getColor(context, R.color.skyBlue))
+
+    }
+
     class TextNoteHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.findViewById(R.id.title_note)
         val text: TextView = itemView.findViewById(R.id.text_note)
-
     }
 
     abstract fun onItemClick(view: View)
@@ -57,10 +63,15 @@ abstract class TextNoteAdapter(private val context: Context, private val folder:
             holder.itemView.tag = textNote.id
             holder.title.text = textNote.title
             holder.text.text = textNote.text
+            if (textNote.parent_folder == 2){
+                titleColorCloudNote(holder.title)
+            }
         }
     }
 
     override fun getItemCount(): Int {
         return notesFilter().size
     }
+
+
 }

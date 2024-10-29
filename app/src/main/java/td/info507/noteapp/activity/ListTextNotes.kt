@@ -1,13 +1,16 @@
 package td.info507.noteapp.activity
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -71,18 +74,21 @@ class ListTextNotes: AppCompatActivity(), Updatable {
             }else{
                 createButton.hide()
             }
+
+
         }
 
-        if (courantFolder == 2){ // Si le dossier ouvert est le dossier cloud alors les notes stockées sur le cloud sont chargées
+        if (courantFolder == 2){ // Si le dossier ouvert est le dossier cloud alors les notes stockées sur le cloud sont chargées et enregistrées localement
             NoteListRequest(applicationContext, this)
         }
     }
+
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return super.onCreateOptionsMenu(menu)
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
