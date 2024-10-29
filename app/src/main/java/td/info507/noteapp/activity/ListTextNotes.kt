@@ -38,7 +38,6 @@ class ListTextNotes: AppCompatActivity(), Updatable {
 
         val courantFolder = intent.getIntExtra(EXTRA_FOLDER, 0) //Origine EXTRA_FOLDER dans les imports
 
-
         list = findViewById(R.id.text_note_list)
         val layoutManager = LinearLayoutManager(this).apply {
             reverseLayout = true  // Inverse l'ordre des éléments
