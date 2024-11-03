@@ -1,10 +1,12 @@
 package td.info507.noteapp.activity
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -35,16 +37,18 @@ class TextNoteActivity: AppCompatActivity(){
         extraNote = intent.getIntExtra(ListTextNotes.EXTRA_NOTE, -1)
         folder = intent.getIntExtra(MainActivity.EXTRA_FOLDER, 0) // 0 : all notes; 1 : favorites notes; 2 : notes from the cloud
 
+        val title = findViewById<TextView>(R.id.title_note)
+        val text = findViewById<TextView>(R.id.text_note)
+
         if (extraNote >= 0){
             val textNote = TextNoteStorage.get(applicationContext).find(extraNote)
 
-            val title = findViewById<TextView>(R.id.title_note)
-            val text = findViewById<TextView>(R.id.text_note)
-
             title.text = textNote?.title
             text.text = textNote?.text
-
+            text.requestFocus() // Si la note existe le clavier s'affiche sur le texte
             isFavorite = textNote!!.favorite
+        }else{
+            title.requestFocus() // Sinon sur le titre
         }
     }
 
@@ -83,7 +87,7 @@ class TextNoteActivity: AppCompatActivity(){
                 )
                 Toast.makeText(applicationContext, "Enregistré !", Toast.LENGTH_SHORT).show()
 
-            } else if(extraNote == -1) { // Si la note n'existe pas on en crée une nouvelle
+            } else { // Si la note n'existe pas on en crée une nouvelle
                 if (folder == 1){ // Si l'utilisateur créer une note depuis un le dossier favoris, alors elle ajouté automatiquement aux favoris
                     isFavorite = true
 

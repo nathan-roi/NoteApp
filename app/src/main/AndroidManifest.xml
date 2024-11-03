@@ -43,7 +43,8 @@
         <activity
             android:name=".activity.TextNoteActivity"
             android:exported="true"
-            android:parentActivityName=".activity.ListTextNotes">
+            android:parentActivityName=".activity.ListTextNotes"
+            android:windowSoftInputMode="stateVisible|adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="td.info507.noteapp.activity.ListTextNotes"/>
