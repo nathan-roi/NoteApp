@@ -9,6 +9,8 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NavUtils
+import androidx.navigation.ActivityNavigator
 import androidx.navigation.findNavController
 import td.info507.noteapp.MainActivity
 import td.info507.noteapp.R
@@ -18,15 +20,15 @@ import td.info507.noteapp.storage.Updatable
 import kotlin.properties.Delegates
 
 class TextNoteActivity: AppCompatActivity(){
-    private lateinit var textOfNote: String
     private var isFavorite: Boolean = false
     private var extraNote: Int = -1
     private var folder: Int = 0
-
+    private var share: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.text_note)
         /*
+        (extraNote contient l'id de la note cliquée sinon -1)
         Si extraNote = -1 l'utilisateur crée une nouvelle note => title and text vide
         Si extraNote >= 0 l'utilisateur a cliqué sur une note existante, on affiche donc ce qu'elle contient
         */
@@ -44,9 +46,6 @@ class TextNoteActivity: AppCompatActivity(){
 
             isFavorite = textNote!!.favorite
         }
-
-        textOfNote = findViewById<EditText>(R.id.text_note).text.toString() // Pour le partage du texte
-
     }
 
     override fun onPause() {
@@ -54,12 +53,19 @@ class TextNoteActivity: AppCompatActivity(){
         saveNote()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (share){ // Quand on revient sur la note si on était sur la pop-up de partage, on remet share à false
+            share = false
+        }
+    }
+
 
     private fun saveNote() {
         val title = findViewById<EditText>(R.id.title_note).text.toString()
         val text = findViewById<EditText>(R.id.text_note).text.toString()
 
-        if (title != "" || text != "") {
+        if ((title != "" || text != "") && !share) {// Si la note est vide on ne l'enregistre pas et si l'activité note perd le focus à cause du partage alors on enregistre pas non plus
 
             if (extraNote >= 0) { // Si la note existe on update celle-ci
                 val textNote = TextNoteStorage.get(applicationContext)
@@ -77,7 +83,7 @@ class TextNoteActivity: AppCompatActivity(){
                 )
                 Toast.makeText(applicationContext, "Enregistré !", Toast.LENGTH_SHORT).show()
 
-            } else { // Si la note n'existe pas on en crée une nouvelle
+            } else if(extraNote == -1) { // Si la note n'existe pas on en crée une nouvelle
                 if (folder == 1){ // Si l'utilisateur créer une note depuis un le dossier favoris, alors elle ajouté automatiquement aux favoris
                     isFavorite = true
 
@@ -108,12 +114,15 @@ class TextNoteActivity: AppCompatActivity(){
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                val intent = Intent(applicationContext, ListTextNotes::class.java)
-                startActivity(intent) // Relance l'activité ListeTextNotes et met donc à jour le RecyclerView (pas très opti mais ça fonctionne)
-                finish() // Ferme l'activité
+                val intent = Intent(applicationContext, ListTextNotes::class.java).apply{
+                    putExtra(MainActivity.EXTRA_FOLDER, folder)
+                }
+                NavUtils.navigateUpTo(this, intent)
                 true
             }
             R.id.action_share -> {
+                share = true
+                val textOfNote = findViewById<EditText>(R.id.text_note).text.toString() // Pour le partage du texte
                 val sendIntent: Intent = Intent().apply {
                     action = Intent.ACTION_SEND
                     putExtra(Intent.EXTRA_TEXT, textOfNote)

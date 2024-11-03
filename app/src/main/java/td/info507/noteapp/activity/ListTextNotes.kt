@@ -51,6 +51,7 @@ class ListTextNotes: AppCompatActivity(), Updatable {
             override fun onItemClick(view: View) {
                 val intent = Intent(applicationContext, TextNoteActivity::class.java).apply {
                     putExtra(EXTRA_NOTE, view.tag as Int) // l'utilisateur vient de cliquer sur une note déjà existante
+                    putExtra(EXTRA_FOLDER, courantFolder)
                 }
                 startActivity(intent)
             }
@@ -83,7 +84,6 @@ class ListTextNotes: AppCompatActivity(), Updatable {
             NoteListRequest(applicationContext, this)
         }
     }
-
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
