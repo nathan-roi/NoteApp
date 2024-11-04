@@ -31,27 +31,30 @@ class MainFolderAdapter(
     }
 
     override fun onBindViewHolder(holder: MainFolderViewHolder, position: Int) {
-        val folder = FolderStorage.get(context).findAll().get(position)
+        if(FolderStorage.get(context).size() > 0){
 
-        // Définir le titre du dossier principal
-        holder.folderTitleTextView.text = folder.title
+            val folder = FolderStorage.get(context).findAll().get(position)
 
-        val subFolderAdapter = object : FolderAdapter(folder.subFolders, context) {
-            override fun onItemClick(view: View) {
-                val folderId = view.tag as Int
-                Log.d("CLICK", "a cliquer $folderId")
+            // Définir le titre du dossier principal
+            holder.folderTitleTextView.text = folder.title
 
-                val intent = Intent(context, FolderDetailActivity::class.java).apply{
-                    putExtra("folderId", folderId)
-                    putExtra("folderTitle", folder.title)
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            val subFolderAdapter = object : FolderAdapter(folder.subFolders, context) {
+                override fun onItemClick(view: View) {
+                    val folderId = view.tag as Int
+                    Log.d("CLICK", "a cliquer $folderId")
+
+                    val intent = Intent(context, FolderDetailActivity::class.java).apply{
+                        putExtra("folderId", folderId)
+                        putExtra("folderTitle", folder.title)
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }
+                    context.startActivity(intent)
                 }
-                context.startActivity(intent)
             }
-        }
 
-        holder.subFolderRecyclerView.layoutManager = LinearLayoutManager(holder.itemView.context)
-        holder.subFolderRecyclerView.adapter = subFolderAdapter
+            holder.subFolderRecyclerView.layoutManager = LinearLayoutManager(holder.itemView.context)
+            holder.subFolderRecyclerView.adapter = subFolderAdapter
+        }
     }
 
     override fun getItemCount(): Int {

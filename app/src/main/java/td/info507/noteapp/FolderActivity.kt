@@ -13,10 +13,10 @@ class FolderActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.folder_view)
+        setContentView(R.layout.infolder_view)
 
         // Initialisation du RecyclerView
-        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view_folder)
+        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view_infolder)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         // Liste d'exemples pour peupler le RecyclerView
@@ -31,13 +31,6 @@ class FolderActivity : AppCompatActivity() {
 
             }
         }
-//        { folder ->
-//            // Action à effectuer lors du clic sur un élément
-//            val intent = Intent(this, FolderDetailActivity::class.java)
-//            intent.putExtra("folderId", folder.id)
-//            intent.putExtra("folderTitle", folder.title)
-//            startActivity(intent)
-//        }
         recyclerView.adapter = adapter
 
         // Ajouter une ligne de séparation

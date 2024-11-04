@@ -1,6 +1,6 @@
 package td.info507.noteapp
 
-import android.content.Intent
+import AddDialogFragment
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -35,13 +35,6 @@ class MainActivity : AppCompatActivity(), Updatable {
 
         // Création de l'adaptateur avec gestion du clic sur les sous-dossiers
         val mainFolderAdapter = MainFolderAdapter(folderList, applicationContext)
-//        { subFolder ->
-//            // Action à effectuer lors du clic sur un sous-dossier
-//            val intent = Intent(this, FolderDetailActivity::class.java)
-//            intent.putExtra("folderId", subFolder.id)
-//            intent.putExtra("folderTitle", subFolder.title)
-//            startActivity(intent)
-//        }
 
         // Assigner l'adaptateur au RecyclerView
         folderRecyclerView.adapter = mainFolderAdapter
@@ -50,11 +43,10 @@ class MainActivity : AppCompatActivity(), Updatable {
         val button = findViewById<FloatingActionButton>(R.id.add_button)
         button.setOnClickListener {
             // Ouvrir le CardDialogFragment
-            val dialogFragment = AddDialogFragment(this)
-            dialogFragment.show(supportFragmentManager, "deleteDialog")
+            val addDialogFragment = AddDialogFragment(this)
+            addDialogFragment.show(supportFragmentManager, "addDialog")
         }
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -63,9 +55,6 @@ class MainActivity : AppCompatActivity(), Updatable {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
@@ -76,8 +65,3 @@ class MainActivity : AppCompatActivity(), Updatable {
         folderRecyclerView.adapter?.notifyDataSetChanged()
     }
 }
-
-
-// Démarre FolderActivity
-// val intent = Intent(this, FolderActivity::class.java)
-// startActivity(intent)

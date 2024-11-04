@@ -13,6 +13,5 @@
         android:textSize="24sp"
         android:textStyle="bold" />
 
-    <!-- Ajoutez ici d'autres vues pour les détails du dossier -->
 
 </LinearLayout>
