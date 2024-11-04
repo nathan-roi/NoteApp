@@ -10,17 +10,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <RadioButton
-            android:id="@+id/radioButton"
+        <Button
+            android:id="@+id/add_note"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Créer une note" />
 
-        <RadioButton
-            android:id="@+id/radioButton2"
+        <Button
+            android:id="@+id/add_folder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Créer un dossier" />
     </RadioGroup>
+
 
 </LinearLayout>
